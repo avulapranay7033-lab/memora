@@ -1,48 +1,20 @@
 // Supabase Configuration
-// 👇 Replace these with YOUR Supabase project credentials
-// Go to: https://supabase.com → Settings → API
-
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = "https://rxrtfiqjyyxjedvcabrw.supabase.co"; // e.g., https://xxxxx.supabase.co
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4cnRmaXFqeXl4amVkdmNhYnJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MzcwOTMsImV4cCI6MjEwMDIxMzA5M30.BBavI7BqWkzhkmgoWMOJ0fwHNrOaKOrzx3lD9DPDmRE"; // anon/public key
+const SUPABASE_URL = "https://rxrtfiqjyyxjedvcabrw.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4cnRmaXFqeXl4amVkdmNhYnJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MzcwOTMsImV4cCI6MjEwMDIxMzA5M30.BBavI7BqWkzhkmgoWMOJ0fwHNrOaKOrzx3lD9DPDmRE";
 
 export let supabase = null;
 export let isSupabaseReady = false;
 
-if (SUPABASE_URL !== "https://rxrtfiqjyyxjedvcabrw.supabase.co" && SUPABASE_ANON_KEY !== "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4cnRmaXFqeXl4amVkdmNhYnJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MzcwOTMsImV4cCI6MjEwMDIxMzA5M30.BBavI7BqWkzhkmgoWMOJ0fwHNrOaKOrzx3lD9DPDmRE") {
-  try {
-    supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    isSupabaseReady = true;
-    console.log("✅ Supabase connected successfully!");
-  } catch (error) {
-    console.error("❌ Supabase init failed:", error);
-  }
-} else {
-  console.warn(
-    "⚠️ Supabase not configured. Using localStorage fallback.\n" +
-    "Add your Supabase URL & Key in src/supabase.js for full functionality.\n\n" +
-    "📌 SQL to create tables in Supabase:\n" +
-    `
-    CREATE TABLE quizzes (
-      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-      creator_name TEXT NOT NULL,
-      title TEXT NOT NULL,
-      share_code TEXT UNIQUE NOT NULL,
-      questions JSONB NOT NULL,
-      created_at TIMESTAMPTZ DEFAULT now()
-    );
-
-    CREATE TABLE responses (
-      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-      quiz_id UUID REFERENCES quizzes(id),
-      respondent_name TEXT NOT NULL,
-      answers JSONB NOT NULL,
-      time_taken INTEGER DEFAULT 0,
-      completed_at TIMESTAMPTZ DEFAULT now()
-    );
-    `
-  );
+// Always try to initialize Supabase
+try {
+  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  isSupabaseReady = true;
+  console.log("✅ Supabase connected successfully!");
+} catch (error) {
+  console.error("❌ Supabase init failed:", error);
+  console.warn("⚠️ Using localStorage fallback.");
 }
 
 // ===== HELPER FUNCTIONS =====
@@ -77,7 +49,6 @@ export async function saveQuiz(quizData) {
     if (error) throw error;
     return { ...data, id: data.id, shareCode: data.share_code, creatorName: data.creator_name };
   } else {
-    // localStorage fallback
     quiz.id = "local_" + Date.now();
     quiz.share_code = code;
     quiz.created_at = new Date().toISOString();
