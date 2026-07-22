@@ -9,6 +9,7 @@ function Result({ response, quiz, onBack }) {
   const certRef = useRef(null);
   const [downloading, setDownloading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
+  const [gender, setGender] = useState("");
 
   if (!response || !quiz) {
     return (
@@ -21,7 +22,6 @@ function Result({ response, quiz, onBack }) {
     );
   }
 
-  // Calculate score by comparing with creator's answers
   const calculateScore = () => {
     if (!quiz.creator_answers || quiz.creator_answers.length === 0) {
       return { correct: 0, total: quiz.questions.length, percentage: 0 };
@@ -31,13 +31,11 @@ function Result({ response, quiz, onBack }) {
     response.answers.forEach((answer, index) => {
       const creatorAnswer = quiz.creator_answers[index];
       if (creatorAnswer && answer.answer) {
-        // For MCQ: exact match
         if (quiz.questions[index].type === "mcq") {
           if (answer.answer.toLowerCase().trim() === creatorAnswer.toLowerCase().trim()) {
             correct++;
           }
         } else {
-          // For text/textarea: partial match (if answer contains key words)
           const answerWords = answer.answer.toLowerCase().trim().split(/\s+/);
           const creatorWords = creatorAnswer.toLowerCase().trim().split(/\s+/);
           const matchCount = answerWords.filter(word => creatorWords.includes(word)).length;
@@ -58,10 +56,16 @@ function Result({ response, quiz, onBack }) {
   const score = calculateScore();
 
   const handleDownload = async () => {
+    if (!gender) {
+      showToast("Please select Mr or Miss first! 😊", "warning");
+      return;
+    }
+    
     setDownloading(true);
+    const prefix = gender === "mr" ? "Mr" : "Miss";
     const success = await downloadCertificate(
       certRef.current,
-      `memora-${response.respondentName}.png`
+      `memora-${prefix}-${response.respondentName}.png`
     );
     setDownloading(false);
     if (success) {
@@ -95,9 +99,10 @@ function Result({ response, quiz, onBack }) {
     return "Time to make more memories together! 💙";
   };
 
+  const prefix = gender === "mr" ? "Mr" : gender === "miss" ? "Miss" : "";
+
   return (
     <div className="result-page">
-      {/* Confetti celebration */}
       {showConfetti && (
         <Confetti
           width={window.innerWidth}
@@ -110,49 +115,65 @@ function Result({ response, quiz, onBack }) {
         />
       )}
 
-      {/* Certificate template (visible for download) */}
-      <div ref={certRef} className="certificate-template">
-        <div className="cert-border">
-          <div className="cert-decoration top-left" />
-          <div className="cert-decoration top-right" />
-          <div className="cert-decoration bottom-left" />
-          <div className="cert-decoration bottom-right" />
+      <div ref={certRef} className="certificate-wrapper">
+        <div className="certificate-template">
+          <div className="cert-corner cert-corner-tl"></div>
+          <div className="cert-corner cert-corner-tr"></div>
+          <div className="cert-corner cert-corner-bl"></div>
+          <div className="cert-corner cert-corner-br"></div>
 
           <div className="cert-content">
-            <div className="cert-logo">💙</div>
-            <h1 className="cert-title">CERTIFICATE OF FRIENDSHIP</h1>
-            <div className="cert-divider" />
-            <p className="cert-subtitle">This certifies that</p>
-            <h2 className="cert-name">{response.respondentName}</h2>
-            <p className="cert-desc">
-              has completed the memory challenge
-            </p>
-            <h3 className="cert-quiz-title">"{quiz.title}"</h3>
-            <p className="cert-creator">created by {quiz.creatorName}</p>
-            
-            <div className="cert-score-section">
-              <div className="cert-score-big">{score.percentage}%</div>
-              <div className="cert-score-label">Score</div>
-              <div className="cert-score-detail">
-                {score.correct} out of {score.total} correct
+            <div className="cert-header">
+              <div className="cert-badge">💙 MEMORA 💙</div>
+              <h1 className="cert-title">Certificate of Friendship</h1>
+              <div className="cert-subtitle">This certifies that</div>
+            </div>
+
+            <div className="cert-body">
+              <div className="cert-name-section">
+                {prefix && <span className="cert-prefix">{prefix}</span>}
+                <h2 className="cert-name">{response.respondentName}</h2>
+              </div>
+
+              <div className="cert-message">
+                has successfully completed the memory challenge
+              </div>
+
+              <div className="cert-quiz-title">"{quiz.title}"</div>
+              <div className="cert-creator">created by {quiz.creatorName}</div>
+
+              <div className="cert-percentage-section">
+                <div className="cert-percentage-label">Your Friendship Percentage is</div>
+                <div className="cert-percentage-value">{score.percentage}%</div>
+                <div className="cert-percentage-detail">
+                  {score.correct} out of {score.total} answers matched
+                </div>
               </div>
             </div>
 
             <div className="cert-footer">
-              <div className="cert-date">
-                {new Date().toLocaleDateString("en-IN", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
+              <div className="cert-footer-left">
+                <div className="cert-date-label">Date</div>
+                <div className="cert-date">
+                  {new Date().toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </div>
               </div>
-              <div className="cert-brand">Memora 💙</div>
+              <div className="cert-footer-center">
+                <div className="cert-seal">🏆</div>
+              </div>
+              <div className="cert-footer-right">
+                <div className="cert-signature-label">Memora</div>
+                <div className="cert-signature">💙</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Visible result screen */}
       <motion.div
         className="result-card"
         initial={{ scale: 0.8, opacity: 0 }}
@@ -169,7 +190,6 @@ function Result({ response, quiz, onBack }) {
         <h1>Completed!</h1>
         <h2>Great job, {response.respondentName}! 💙</h2>
 
-        {/* Score Display */}
         <motion.div
           className="score-display"
           initial={{ scale: 0 }}
@@ -186,11 +206,29 @@ function Result({ response, quiz, onBack }) {
           </p>
         </motion.div>
 
+        <div className="gender-selection">
+          <label>Select title for certificate:</label>
+          <div className="gender-buttons">
+            <button
+              className={`gender-btn ${gender === "mr" ? "selected" : ""}`}
+              onClick={() => setGender("mr")}
+            >
+              Mr
+            </button>
+            <button
+              className={`gender-btn ${gender === "miss" ? "selected" : ""}`}
+              onClick={() => setGender("miss")}
+            >
+              Miss
+            </button>
+          </div>
+        </div>
+
         <div className="result-actions">
           <motion.button
             className="download-btn"
             onClick={handleDownload}
-            disabled={downloading}
+            disabled={downloading || !gender}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >

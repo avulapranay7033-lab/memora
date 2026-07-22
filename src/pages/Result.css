@@ -36,7 +36,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-/* Glow border */
 .result-card::before {
   content: "";
   position: absolute;
@@ -85,46 +84,95 @@
   font-weight: 500;
 }
 
-.result-stats {
+.score-display {
+  margin: 30px 0;
+  text-align: center;
+}
+
+.score-circle {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+  border: 4px solid rgba(99, 102, 241, 0.5);
   display: flex;
-  gap: 14px;
+  flex-direction: column;
   justify-content: center;
-  margin-bottom: 35px;
+  align-items: center;
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
 }
 
-.r-stat {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 18px;
-  padding: 22px 20px;
-  flex: 1;
-  transition: 0.3s;
-}
-
-.r-stat:hover {
-  border-color: rgba(99, 102, 241, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.r-stat-icon {
-  font-size: 28px;
-  margin-bottom: 8px;
-}
-
-.r-stat-num {
-  font-size: 24px;
+.score-number {
+  font-size: 48px;
   font-weight: 800;
   background: linear-gradient(135deg, #6366f1, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1;
 }
 
-.r-stat-label {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.35);
-  margin-top: 4px;
-  font-weight: 500;
+.score-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 5px;
+  font-weight: 600;
+}
+
+.score-message {
+  font-size: 18px;
+  color: white;
+  margin: 15px 0 8px;
+  font-weight: 600;
+}
+
+.score-detail {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.gender-selection {
+  margin: 25px 0;
+}
+
+.gender-selection label {
+  display: block;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 12px;
+}
+
+.gender-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.gender-btn {
+  flex: 1;
+  max-width: 120px;
+  padding: 12px 24px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.gender-btn:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.gender-btn.selected {
+  border-color: #6366f1;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+  color: white;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
 }
 
 .result-actions {
@@ -157,7 +205,6 @@
   cursor: not-allowed;
 }
 
-/* Share buttons */
 .share-buttons {
   display: flex;
   gap: 10px;
@@ -214,157 +261,201 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* =========== CERTIFICATE TEMPLATE =========== */
-.certificate-template {
-  position: fixed;
-  left: -9999px;
+.certificate-wrapper {
+  position: absolute;
+  left: 0;
   top: 0;
   width: 900px;
   height: 636px;
+  pointer-events: none;
+  opacity: 0;
 }
 
-.cert-border {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(145deg, #0a0a1a, #12102e, #1a1740);
+.certificate-template {
+  width: 900px;
+  height: 636px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%);
   position: relative;
-  padding: 12px;
-  box-sizing: border-box;
+  overflow: hidden;
+  font-family: 'Georgia', serif;
 }
 
-.cert-border::before {
-  content: "";
+.cert-corner {
   position: absolute;
-  inset: 12px;
-  border: 2px solid rgba(255, 215, 0, 0.5);
-  border-radius: 8px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
 }
 
-.cert-border::after {
-  content: "";
-  position: absolute;
-  inset: 20px;
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  border-radius: 6px;
-}
-
-.cert-decoration {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border-color: rgba(255, 215, 0, 0.6);
-  border-style: solid;
-}
-
-.cert-decoration.top-left { top: 28px; left: 28px; border-width: 3px 0 0 3px; border-radius: 8px 0 0 0; }
-.cert-decoration.top-right { top: 28px; right: 28px; border-width: 3px 3px 0 0; border-radius: 0 8px 0 0; }
-.cert-decoration.bottom-left { bottom: 28px; left: 28px; border-width: 0 0 3px 3px; border-radius: 0 0 0 8px; }
-.cert-decoration.bottom-right { bottom: 28px; right: 28px; border-width: 0 3px 3px 0; border-radius: 0 0 8px 0; }
+.cert-corner-tl { top: -20px; left: -20px; }
+.cert-corner-tr { top: -20px; right: -20px; }
+.cert-corner-bl { bottom: -20px; left: -20px; }
+.cert-corner-br { bottom: -20px; right: -20px; }
 
 .cert-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  z-index: 1;
+  padding: 50px 60px;
   height: 100%;
-  padding: 40px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   box-sizing: border-box;
-  text-align: center;
-  font-family: Georgia, "Times New Roman", serif;
 }
 
-.cert-logo { font-size: 42px; margin-bottom: 5px; }
-.cert-title { font-size: 32px; font-weight: 700; color: #ffd700; letter-spacing: 6px; margin: 0 0 8px 0; text-transform: uppercase; }
-.cert-divider { width: 200px; height: 2px; background: linear-gradient(90deg, transparent, #ffd700, transparent); margin: 8px 0 12px 0; }
-.cert-subtitle { font-size: 16px; color: rgba(255, 255, 255, 0.5); margin: 0 0 8px 0; font-style: italic; }
-.cert-name { font-size: 42px; font-weight: 700; color: #ffffff; margin: 5px 0; font-family: Georgia, serif; border-bottom: 2px solid rgba(255, 215, 0, 0.4); padding-bottom: 8px; }
-.cert-desc { font-size: 16px; color: rgba(255, 255, 255, 0.5); margin: 10px 0 5px 0; }
-.cert-quiz-title { font-size: 22px; color: #818cf8; margin: 5px 0; font-style: italic; }
-.cert-creator { font-size: 14px; color: rgba(255, 255, 255, 0.4); margin: 0 0 18px 0; }
-
-.cert-stats { display: flex; align-items: center; gap: 30px; margin: 10px 0 15px 0; }
-.cert-stat { display: flex; flex-direction: column; }
-.cert-stat-num { font-size: 22px; font-weight: 700; color: #ffd700; }
-.cert-stat-label { font-size: 12px; color: rgba(255, 255, 255, 0.4); }
-.cert-stat-divider { width: 1px; height: 40px; background: rgba(255, 255, 255, 0.15); }
-.cert-footer { display: flex; justify-content: space-between; width: 100%; margin-top: 15px; padding-top: 10px; }
-.cert-date { font-size: 14px; color: rgba(255, 255, 255, 0.4); }
-.cert-brand { font-size: 16px; color: rgba(255, 255, 255, 0.6); font-weight: 600; }
-
-/* Score Display Styles */
-.score-display {
-  margin: 30px 0;
+.cert-header {
   text-align: center;
+  margin-bottom: 20px;
 }
 
-.score-circle {
-  width: 150px;
-  height: 150px;
-  margin: 0 auto 20px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
-  border: 4px solid rgba(99, 102, 241, 0.5);
+.cert-badge {
+  display: inline-block;
+  padding: 8px 24px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.cert-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;
+}
+
+.cert-subtitle {
+  font-size: 18px;
+  color: #64748b;
+  font-style: italic;
+}
+
+.cert-body {
+  text-align: center;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+  gap: 15px;
 }
 
-.score-number {
-  font-size: 48px;
+.cert-name-section {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.cert-prefix {
+  font-size: 28px;
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.cert-name {
+  font-size: 56px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  border-bottom: 3px solid #6366f1;
+  padding-bottom: 8px;
+  font-family: 'Georgia', serif;
+}
+
+.cert-message {
+  font-size: 18px;
+  color: #475569;
+  margin: 10px 0;
+}
+
+.cert-quiz-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #6366f1;
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.cert-creator {
+  font-size: 16px;
+  color: #64748b;
+}
+
+.cert-percentage-section {
+  margin: 30px 0;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  border: 2px solid rgba(99, 102, 241, 0.2);
+}
+
+.cert-percentage-label {
+  font-size: 20px;
+  color: #475569;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.cert-percentage-value {
+  font-size: 96px;
   font-weight: 800;
-  background: linear-gradient(135deg, #6366f1, #a855f7);
+  background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1;
+  margin: 10px 0;
+  text-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
 }
 
-.score-label {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 5px;
-  font-weight: 600;
+.cert-percentage-detail {
+  font-size: 16px;
+  color: #64748b;
+  margin-top: 10px;
 }
 
-.score-message {
-  font-size: 18px;
-  color: white;
-  margin: 15px 0 8px;
-  font-weight: 600;
+.cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(99, 102, 241, 0.2);
 }
 
-.score-detail {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* Certificate Score Section */
-.cert-score-section {
-  margin: 30px 0;
+.cert-footer-left,
+.cert-footer-right {
   text-align: center;
 }
 
-.cert-score-big {
-  font-size: 72px;
-  font-weight: 800;
-  color: #ffd700;
-  line-height: 1;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-.cert-score-label {
-  font-size: 24px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 5px;
-  font-weight: 600;
-  letter-spacing: 3px;
+.cert-date-label,
+.cert-signature-label {
+  font-size: 12px;
+  color: #64748b;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
 }
 
-.cert-score-detail {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 10px;
+.cert-date,
+.cert-signature {
+  font-size: 18px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.cert-footer-center {
+  text-align: center;
+}
+
+.cert-seal {
+  font-size: 48px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
