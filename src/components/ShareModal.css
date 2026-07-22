@@ -1,0 +1,157 @@
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.share-modal {
+  background: linear-gradient(145deg, #1e1b3a, #252347);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 35px 30px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  position: relative;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+.share-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.share-modal h2 {
+  font-size: 24px;
+  margin-bottom: 4px;
+  color: white;
+}
+
+.share-subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.qr-wrapper {
+  display: inline-flex;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  margin-bottom: 15px;
+}
+
+.share-code-big {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 8px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 15px;
+}
+
+.share-link-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 20px;
+}
+
+.share-link-text {
+  flex: 1;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.copy-mini {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 2px;
+  transition: 0.2s;
+}
+
+.copy-mini:hover {
+  transform: scale(1.15);
+}
+
+.share-platforms {
+  display: flex;
+  gap: 10px;
+}
+
+.platform-btn {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: 0.3s;
+}
+
+.platform-btn.whatsapp {
+  background: #25d366;
+}
+
+.platform-btn.twitter {
+  background: #1da1f2;
+}
+
+.platform-btn.copy-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 450px) {
+  .share-modal {
+    padding: 25px 20px;
+  }
+
+  .share-code-big {
+    font-size: 28px;
+    letter-spacing: 5px;
+  }
+
+  .share-platforms {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,298 @@
+.myquizzes-page {
+  min-height: 100vh;
+  background: #08070f;
+  padding: 30px 15px;
+  color: white;
+}
+
+.mq-container {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.mq-container h1 {
+  font-size: 30px;
+  color: white;
+  margin-bottom: 5px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff, #c7d2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mq-subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 25px;
+}
+
+.mq-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.mq-empty {
+  text-align: center;
+  padding: 50px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.mq-empty p {
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 5px;
+}
+
+.mq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 22px;
+  transition: 0.3s;
+}
+
+.mq-card:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mq-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mq-card-header h3 {
+  font-size: 18px;
+  color: white;
+  margin: 0;
+}
+
+.mq-code {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  padding: 5px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.mq-card-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 15px;
+}
+
+.mq-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.mq-action-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mq-action-btn.dashboard {
+  flex: 1;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+
+.mq-action-btn.dashboard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.mq-action-btn.share {
+  flex: 1;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.mq-action-btn.share:hover {
+  background: rgba(16, 185, 129, 0.25);
+}
+
+.mq-action-btn.edit {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.mq-action-btn.edit:hover {
+  background: rgba(245, 158, 11, 0.25);
+}
+
+.mq-action-btn.duplicate {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #818cf8;
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.mq-action-btn.duplicate:hover {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+.mq-action-btn.delete {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.mq-action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Delete modal */
+.delete-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.delete-modal {
+  background: linear-gradient(145deg, #1e1b3a, #252347);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+.delete-modal h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.delete-modal p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 15px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.delete-modal strong {
+  color: white;
+}
+
+.delete-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.delete-cancel {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.delete-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.delete-confirm {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #ef4444;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.delete-confirm:hover {
+  background: #dc2626;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 500px) {
+  .mq-card-actions {
+    flex-direction: column;
+  }
+
+  .mq-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

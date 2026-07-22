@@ -1,0 +1,298 @@
+.answer-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #08070f;
+  padding: 20px;
+  position: relative;
+}
+
+.answer-page::before {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+  top: 10%;
+  left: -10%;
+  pointer-events: none;
+}
+
+.answer-page::after {
+  content: "";
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
+  bottom: 10%;
+  right: -5%;
+  pointer-events: none;
+}
+
+.answer-card {
+  width: 550px;
+  max-width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 28px;
+  padding: 38px;
+  color: white;
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Glow border */
+.answer-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 28px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.3),
+    transparent 40%,
+    transparent 60%,
+    rgba(168, 85, 247, 0.2)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.quiz-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15));
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #fbbf24;
+  letter-spacing: 0.5px;
+}
+
+.answer-card h1 {
+  font-size: 30px;
+  margin-bottom: 8px;
+  color: white;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff, #c7d2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.creator-info {
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.creator-info strong {
+  color: #818cf8;
+}
+
+.q-count {
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.name-input-section label {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.name-input-section input {
+  width: 100%;
+  padding: 15px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+.name-input-section input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.name-input-section input:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.05);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.08);
+}
+
+.name-input-section button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.name-input-section button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+.name-input-section button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Progress section */
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.respondent-name {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #a5b4fc;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  border-radius: 20px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+.question-text {
+  font-size: 22px;
+  line-height: 1.5;
+  margin-bottom: 28px;
+  color: white;
+  font-weight: 600;
+}
+
+.answer-input input,
+.answer-input textarea {
+  width: 100%;
+  padding: 15px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: 0.3s;
+}
+
+.answer-input input::placeholder,
+.answer-input textarea::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.answer-input input:focus,
+.answer-input textarea:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.05);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.08);
+}
+
+.answer-input textarea {
+  resize: none;
+}
+
+.mcq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mcq-option {
+  width: 100%;
+  padding: 15px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.3s;
+  font-weight: 500;
+}
+
+.mcq-option:hover {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.mcq-option.selected {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  border-color: rgba(99, 102, 241, 0.5);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+}
+
+.next-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 28px;
+  transition: 0.3s;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25);
+}
+
+.next-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.35);
+}
+
+.next-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
