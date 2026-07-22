@@ -1,8 +1,8 @@
+import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 import Confetti from "react-confetti";
-import { motion } from "framer-motion";
-import { downloadCertificate } from "../utils/certificate";
 import { showToast } from "../components/Toast";
+import { downloadCertificate } from "../utils/certificate";
 import "./Result.css";
 
 function Result({ response, quiz, onBack }) {
@@ -21,6 +21,42 @@ function Result({ response, quiz, onBack }) {
     );
   }
 
+  // Calculate score by comparing with creator's answers
+  const calculateScore = () => {
+    if (!quiz.creator_answers || quiz.creator_answers.length === 0) {
+      return { correct: 0, total: quiz.questions.length, percentage: 0 };
+    }
+
+    let correct = 0;
+    response.answers.forEach((answer, index) => {
+      const creatorAnswer = quiz.creator_answers[index];
+      if (creatorAnswer && answer.answer) {
+        // For MCQ: exact match
+        if (quiz.questions[index].type === "mcq") {
+          if (answer.answer.toLowerCase().trim() === creatorAnswer.toLowerCase().trim()) {
+            correct++;
+          }
+        } else {
+          // For text/textarea: partial match (if answer contains key words)
+          const answerWords = answer.answer.toLowerCase().trim().split(/\s+/);
+          const creatorWords = creatorAnswer.toLowerCase().trim().split(/\s+/);
+          const matchCount = answerWords.filter(word => creatorWords.includes(word)).length;
+          if (matchCount / creatorWords.length >= 0.5) {
+            correct++;
+          }
+        }
+      }
+    });
+
+    return {
+      correct,
+      total: quiz.questions.length,
+      percentage: Math.round((correct / quiz.questions.length) * 100),
+    };
+  };
+
+  const score = calculateScore();
+
   const handleDownload = async () => {
     setDownloading(true);
     const success = await downloadCertificate(
@@ -36,7 +72,7 @@ function Result({ response, quiz, onBack }) {
   };
 
   const handleShareWhatsApp = () => {
-    const text = `🎉 I just completed the "${quiz.title}" memory challenge on Memora!\n\nCreated by ${quiz.creatorName} 💙\n\nTry it yourself: ${window.location.origin}${window.location.pathname}#/quiz/${quiz.shareCode}`;
+    const text = `🎉 I scored ${score.percentage}% on "${quiz.title}" memory challenge!\n\nCreated by ${quiz.creatorName} 💙\n\nTry it yourself: ${window.location.origin}${window.location.pathname}#/quiz/${quiz.shareCode}`;
     window.open(
       `https://wa.me/?text=${encodeURIComponent(text)}`,
       "_blank"
@@ -44,7 +80,7 @@ function Result({ response, quiz, onBack }) {
   };
 
   const handleShareTwitter = () => {
-    const text = `I just completed the "${quiz.title}" memory challenge on Memora! 💙🎉`;
+    const text = `I scored ${score.percentage}% on "${quiz.title}" memory challenge! 💙🎉`;
     const url = `${window.location.origin}${window.location.pathname}#/quiz/${quiz.shareCode}`;
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
@@ -52,16 +88,12 @@ function Result({ response, quiz, onBack }) {
     );
   };
 
-  const formatTime = (seconds) => {
-    if (seconds < 60) return `${seconds} seconds`;
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}m ${s}s`;
+  const getScoreMessage = () => {
+    if (score.percentage >= 90) return "Amazing! You know them so well! 🌟";
+    if (score.percentage >= 70) return "Great job! Strong friendship! 💪";
+    if (score.percentage >= 50) return "Good effort! Keep making memories! 😊";
+    return "Time to make more memories together! 💙";
   };
-
-  const answeredCount = response.answers.filter(
-    (a) => a.answer && a.answer.trim()
-  ).length;
 
   return (
     <div className="result-page">
@@ -78,7 +110,7 @@ function Result({ response, quiz, onBack }) {
         />
       )}
 
-      {/* Hidden certificate template for download */}
+      {/* Certificate template (visible for download) */}
       <div ref={certRef} className="certificate-template">
         <div className="cert-border">
           <div className="cert-decoration top-left" />
@@ -93,27 +125,19 @@ function Result({ response, quiz, onBack }) {
             <p className="cert-subtitle">This certifies that</p>
             <h2 className="cert-name">{response.respondentName}</h2>
             <p className="cert-desc">
-              has successfully completed the memory challenge
+              has completed the memory challenge
             </p>
             <h3 className="cert-quiz-title">"{quiz.title}"</h3>
             <p className="cert-creator">created by {quiz.creatorName}</p>
-            <div className="cert-stats">
-              <div className="cert-stat">
-                <span className="cert-stat-num">
-                  {answeredCount}/{quiz.questions.length}
-                </span>
-                <span className="cert-stat-label">Questions Answered</span>
-              </div>
-              <div className="cert-stat-divider" />
-              <div className="cert-stat">
-                <span className="cert-stat-num">
-                  {formatTime(
-                    response.timeTaken || response.time_taken
-                  )}
-                </span>
-                <span className="cert-stat-label">Time Taken</span>
+            
+            <div className="cert-score-section">
+              <div className="cert-score-big">{score.percentage}%</div>
+              <div className="cert-score-label">Score</div>
+              <div className="cert-score-detail">
+                {score.correct} out of {score.total} correct
               </div>
             </div>
+
             <div className="cert-footer">
               <div className="cert-date">
                 {new Date().toLocaleDateString("en-IN", {
@@ -145,32 +169,22 @@ function Result({ response, quiz, onBack }) {
         <h1>Completed!</h1>
         <h2>Great job, {response.respondentName}! 💙</h2>
 
-        <div className="result-stats">
-          <motion.div
-            className="r-stat"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div className="r-stat-icon">📝</div>
-            <div className="r-stat-num">
-              {answeredCount}/{quiz.questions.length}
-            </div>
-            <div className="r-stat-label">Answered</div>
-          </motion.div>
-          <motion.div
-            className="r-stat"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.45 }}
-          >
-            <div className="r-stat-icon">⏱️</div>
-            <div className="r-stat-num">
-              {formatTime(response.timeTaken || response.time_taken)}
-            </div>
-            <div className="r-stat-label">Time Taken</div>
-          </motion.div>
-        </div>
+        {/* Score Display */}
+        <motion.div
+          className="score-display"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring" }}
+        >
+          <div className="score-circle">
+            <div className="score-number">{score.percentage}%</div>
+            <div className="score-label">Score</div>
+          </div>
+          <p className="score-message">{getScoreMessage()}</p>
+          <p className="score-detail">
+            {score.correct} out of {score.total} answers matched
+          </p>
+        </motion.div>
 
         <div className="result-actions">
           <motion.button

@@ -37,6 +37,7 @@ export async function saveQuiz(quizData) {
     title: quizData.title,
     questions: quizData.questions,
     share_code: code,
+    creator_answers: quizData.creatorAnswers || [],
   };
 
   if (isSupabaseReady) {
@@ -56,6 +57,36 @@ export async function saveQuiz(quizData) {
     existing.push(quiz);
     localStorage.setItem("memora_quizzes", JSON.stringify(existing));
     return { ...quiz, shareCode: code };
+  }
+}
+
+export async function updateQuiz(quizId, updates) {
+  if (isSupabaseReady) {
+    const updateData = {};
+    if (updates.creatorAnswers) {
+      updateData.creator_answers = updates.creatorAnswers;
+    }
+
+    const { data, error } = await supabase
+      .from("quizzes")
+      .update(updateData)
+      .eq("id", quizId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { ...data, id: data.id, shareCode: data.share_code, creatorName: data.creator_name };
+  } else {
+    const quizzes = JSON.parse(localStorage.getItem("memora_quizzes") || "[]");
+    const index = quizzes.findIndex((q) => q.id === quizId);
+    if (index !== -1) {
+      if (updates.creatorAnswers) {
+        quizzes[index].creator_answers = updates.creatorAnswers;
+      }
+      localStorage.setItem("memora_quizzes", JSON.stringify(quizzes));
+      return { ...quizzes[index], shareCode: quizzes[index].share_code, creatorName: quizzes[index].creator_name };
+    }
+    throw new Error("Quiz not found");
   }
 }
 

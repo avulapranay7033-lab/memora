@@ -1,32 +1,33 @@
-import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import { saveQuiz, getQuizByCode, saveResponse, getQuizById } from "./supabase";
+import { useEffect, useState } from "react";
+import { getQuizByCode, getQuizById, saveQuiz, saveResponse, updateQuiz } from "./supabase";
 
 // Components
-import ToastContainer, { showToast } from "./components/Toast";
+import FloatingDecorations from "./components/FloatingDecorations";
+import MobileNav from "./components/MobileNav";
 import PageTransition from "./components/PageTransition";
 import ParticleBackground from "./components/ParticleBackground";
-import FloatingDecorations from "./components/FloatingDecorations";
 import TemplateSelector from "./components/TemplateSelector";
-import MobileNav from "./components/MobileNav";
+import ToastContainer, { showToast } from "./components/Toast";
 
 // Pages
-import Welcome from "./pages/Welcome";
-import CreateQuiz from "./pages/CreateQuiz";
 import AnswerQuiz from "./pages/AnswerQuiz";
+import CreateQuiz from "./pages/CreateQuiz";
+import CreatorAnswer from "./pages/CreatorAnswer";
 import Dashboard from "./pages/Dashboard";
-import Result from "./pages/Result";
 import MyQuizzes from "./pages/MyQuizzes";
+import Result from "./pages/Result";
+import Welcome from "./pages/Welcome";
 
 function App() {
   const [route, setRoute] = useState({ page: "welcome", params: {} });
   const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [pendingQuiz, setPendingQuiz] = useState(null);
   const [lastResponse, setLastResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [editQuiz, setEditQuiz] = useState(null);
 
-  // Hash-based router
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.slice(1) || "/";
@@ -36,6 +37,8 @@ function App() {
         setRoute({ page: "answer", params: { code: parts[1] } });
       } else if (parts[0] === "create") {
         setRoute({ page: "create", params: {} });
+      } else if (parts[0] === "creator-answer") {
+        setRoute({ page: "creator-answer", params: {} });
       } else if (parts[0] === "templates") {
         setRoute({ page: "templates", params: {} });
       } else if (parts[0] === "edit" && parts[1]) {
@@ -60,23 +63,41 @@ function App() {
     window.location.hash = path;
   };
 
-  // ===== Handlers =====
-
   const handleCreateQuiz = async (quizData) => {
     setLoading(true);
     try {
-      const quiz = await saveQuiz(quizData);
-      setCurrentQuiz(quiz);
+      const quiz = await saveQuiz({ ...quizData, creatorAnswers: [] });
+      setPendingQuiz(quiz);
       setSelectedTemplate(null);
       setEditQuiz(null);
-      navigate(`/dashboard/${quiz.id}`);
+      navigate("/creator-answer");
 
       setTimeout(() => {
-        showToast(`Quiz created! Code: ${quiz.shareCode} 🎉`, "success");
+        showToast(`Quiz created! Now answer your own questions 🎯`, "success");
       }, 500);
     } catch (error) {
       console.error("Failed to create quiz:", error);
       showToast("Failed to create quiz. Please try again.", "error");
+    }
+    setLoading(false);
+  };
+
+  const handleCreatorAnswer = async (creatorAnswers) => {
+    if (!pendingQuiz) return;
+
+    setLoading(true);
+    try {
+      const updatedQuiz = await updateQuiz(pendingQuiz.id, { creatorAnswers });
+      setPendingQuiz(null);
+      setCurrentQuiz(updatedQuiz);
+      navigate(`/dashboard/${updatedQuiz.id}`);
+
+      setTimeout(() => {
+        showToast(`Quiz ready! Share code: ${updatedQuiz.shareCode} 🎉`, "success");
+      }, 500);
+    } catch (error) {
+      console.error("Failed to save creator answers:", error);
+      showToast("Failed to save answers. Please try again.", "error");
     }
     setLoading(false);
   };
@@ -115,7 +136,6 @@ function App() {
   };
 
   const handleEditQuiz = async (quiz) => {
-    // Load full quiz data and set as edit mode
     const fullQuiz = await getQuizById(quiz.id);
     if (fullQuiz) {
       setEditQuiz(fullQuiz);
@@ -123,7 +143,6 @@ function App() {
     }
   };
 
-  // Auto-load quiz when navigating to answer page
   useEffect(() => {
     if (route.page === "answer" && route.params.code && !currentQuiz) {
       const loadQuiz = async () => {
@@ -143,10 +162,8 @@ function App() {
       };
       loadQuiz();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.page, route.params.code]);
 
-  // ===== Loading State =====
   if (loading) {
     return (
       <div
@@ -179,7 +196,6 @@ function App() {
     );
   }
 
-  // ===== Render Pages =====
   const renderPage = () => {
     switch (route.page) {
       case "welcome":
@@ -211,6 +227,20 @@ function App() {
               onCreateQuiz={handleCreateQuiz}
               onBack={() => {
                 setSelectedTemplate(null);
+                navigate("/");
+              }}
+            />
+          </PageTransition>
+        );
+
+      case "creator-answer":
+        return (
+          <PageTransition key="creator-answer">
+            <CreatorAnswer
+              quiz={pendingQuiz}
+              onSubmit={handleCreatorAnswer}
+              onBack={() => {
+                setPendingQuiz(null);
                 navigate("/");
               }}
             />
