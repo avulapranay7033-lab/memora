@@ -4,13 +4,13 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = "YOUR_SUPABASE_URL"; // e.g., https://xxxxx.supabase.co
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // anon/public key
+const SUPABASE_URL = "https://rxrtfiqjyyxjedvcabrw.supabase.co"; // e.g., https://xxxxx.supabase.co
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4cnRmaXFqeXl4amVkdmNhYnJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MzcwOTMsImV4cCI6MjEwMDIxMzA5M30.BBavI7BqWkzhkmgoWMOJ0fwHNrOaKOrzx3lD9DPDmRE"; // anon/public key
 
 export let supabase = null;
 export let isSupabaseReady = false;
 
-if (SUPABASE_URL !== "YOUR_SUPABASE_URL" && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY") {
+if (SUPABASE_URL !== "https://rxrtfiqjyyxjedvcabrw.supabase.co" && SUPABASE_ANON_KEY !== "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4cnRmaXFqeXl4amVkdmNhYnJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MzcwOTMsImV4cCI6MjEwMDIxMzA5M30.BBavI7BqWkzhkmgoWMOJ0fwHNrOaKOrzx3lD9DPDmRE") {
   try {
     supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     isSupabaseReady = true;
