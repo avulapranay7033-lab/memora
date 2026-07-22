@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Confetti from "react-confetti";
 import { showToast } from "../components/Toast";
 import { downloadCertificate } from "../utils/certificate";
 import "./Result.css";
 
 function Result({ response, quiz, onBack }) {
-  const certRef = useRef(null);
   const [downloading, setDownloading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
   const [gender, setGender] = useState("");
@@ -62,12 +61,14 @@ function Result({ response, quiz, onBack }) {
     }
     
     setDownloading(true);
-    const prefix = gender === "mr" ? "Mr" : "Miss";
     const success = await downloadCertificate(
-      certRef.current,
-      `memora-${prefix}-${response.respondentName}.png`
+      quiz,
+      score,
+      response.respondentName,
+      gender
     );
     setDownloading(false);
+    
     if (success) {
       showToast("Certificate downloaded! 📥", "success");
     } else {
@@ -99,8 +100,6 @@ function Result({ response, quiz, onBack }) {
     return "Time to make more memories together! 💙";
   };
 
-  const prefix = gender === "mr" ? "Mr" : gender === "miss" ? "Miss" : "";
-
   return (
     <div className="result-page">
       {showConfetti && (
@@ -114,65 +113,6 @@ function Result({ response, quiz, onBack }) {
           onConfettiComplete={() => setShowConfetti(false)}
         />
       )}
-
-      <div ref={certRef} className="certificate-wrapper">
-        <div className="certificate-template">
-          <div className="cert-corner cert-corner-tl"></div>
-          <div className="cert-corner cert-corner-tr"></div>
-          <div className="cert-corner cert-corner-bl"></div>
-          <div className="cert-corner cert-corner-br"></div>
-
-          <div className="cert-content">
-            <div className="cert-header">
-              <div className="cert-badge">💙 MEMORA 💙</div>
-              <h1 className="cert-title">Certificate of Friendship</h1>
-              <div className="cert-subtitle">This certifies that</div>
-            </div>
-
-            <div className="cert-body">
-              <div className="cert-name-section">
-                {prefix && <span className="cert-prefix">{prefix}</span>}
-                <h2 className="cert-name">{response.respondentName}</h2>
-              </div>
-
-              <div className="cert-message">
-                has successfully completed the memory challenge
-              </div>
-
-              <div className="cert-quiz-title">"{quiz.title}"</div>
-              <div className="cert-creator">created by {quiz.creatorName}</div>
-
-              <div className="cert-percentage-section">
-                <div className="cert-percentage-label">Your Friendship Percentage is</div>
-                <div className="cert-percentage-value">{score.percentage}%</div>
-                <div className="cert-percentage-detail">
-                  {score.correct} out of {score.total} answers matched
-                </div>
-              </div>
-            </div>
-
-            <div className="cert-footer">
-              <div className="cert-footer-left">
-                <div className="cert-date-label">Date</div>
-                <div className="cert-date">
-                  {new Date().toLocaleDateString("en-IN", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </div>
-              </div>
-              <div className="cert-footer-center">
-                <div className="cert-seal">🏆</div>
-              </div>
-              <div className="cert-footer-right">
-                <div className="cert-signature-label">Memora</div>
-                <div className="cert-signature">💙</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <motion.div
         className="result-card"
