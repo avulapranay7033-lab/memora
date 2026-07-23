@@ -9,28 +9,33 @@ export async function downloadCertificate(quizData, score, respondentName, gende
       year: "numeric",
     });
 
-    // Create certificate element
+    // Create certificate with inline styles only
     const certDiv = document.createElement("div");
-    certDiv.style.position = "fixed";
-    certDiv.style.left = "-9999px";
-    certDiv.style.top = "0";
-    certDiv.style.width = "900px";
-    certDiv.style.height = "636px";
-    certDiv.style.background = "linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%)";
-    certDiv.style.fontFamily = "Georgia, 'Times New Roman', serif";
-    certDiv.style.padding = "50px 60px";
-    certDiv.style.boxSizing = "border-box";
-    certDiv.style.display = "flex";
-    certDiv.style.flexDirection = "column";
-    certDiv.style.justifyContent = "space-between";
+    
+    // Apply styles directly
+    Object.assign(certDiv.style, {
+      position: "fixed",
+      left: "-9999px",
+      top: "0",
+      width: "900px",
+      height: "636px",
+      background: "#fef3c7",
+      fontFamily: "Georgia, serif",
+      padding: "50px 60px",
+      boxSizing: "border-box",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      color: "#1e293b",
+    });
 
     certDiv.innerHTML = `
       <div style="text-align: center;">
         <div style="
           display: inline-block;
           padding: 8px 24px;
-          background: linear-gradient(135deg, #6366f1, #a855f7);
-          color: white;
+          background: #6366f1;
+          color: #ffffff;
           border-radius: 20px;
           font-size: 14px;
           font-weight: 700;
@@ -42,7 +47,6 @@ export async function downloadCertificate(quizData, score, respondentName, gende
           font-weight: 700;
           color: #1e293b;
           margin: 0 0 10px 0;
-          font-family: Georgia, serif;
         ">Certificate of Friendship</h1>
         <div style="font-size: 18px; color: #64748b; font-style: italic;">
           This certifies that
@@ -60,7 +64,6 @@ export async function downloadCertificate(quizData, score, respondentName, gende
             margin: 0 0 0 12px;
             border-bottom: 3px solid #6366f1;
             padding-bottom: 8px;
-            font-family: Georgia, serif;
           ">${respondentName}</h2>
         </div>
 
@@ -79,9 +82,9 @@ export async function downloadCertificate(quizData, score, respondentName, gende
         <div style="
           margin: 30px auto;
           padding: 30px;
-          background: rgba(255, 255, 255, 0.5);
+          background: #ffffff;
           border-radius: 20px;
-          border: 2px solid rgba(99, 102, 241, 0.2);
+          border: 2px solid #6366f1;
           max-width: 500px;
         ">
           <div style="font-size: 20px; color: #475569; margin-bottom: 10px; font-weight: 500;">
@@ -106,7 +109,7 @@ export async function downloadCertificate(quizData, score, respondentName, gende
         align-items: flex-end;
         margin-top: 30px;
         padding-top: 20px;
-        border-top: 2px solid rgba(99, 102, 241, 0.2);
+        border-top: 2px solid #6366f1;
       ">
         <div style="text-align: center;">
           <div style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
@@ -132,18 +135,15 @@ export async function downloadCertificate(quizData, score, respondentName, gende
 
     document.body.appendChild(certDiv);
     
-    // Wait for rendering
-    await new Promise(resolve => setTimeout(resolve, 200));
+    // Wait for DOM to update
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Capture as PNG
+    // Generate image
     const dataUrl = await toPng(certDiv, {
       quality: 1.0,
       pixelRatio: 2,
       cacheBust: true,
-      style: {
-        transform: 'scale(1)',
-        transformOrigin: 'top left'
-      }
+      skipAutoScale: true,
     });
     
     document.body.removeChild(certDiv);
@@ -157,6 +157,7 @@ export async function downloadCertificate(quizData, score, respondentName, gende
     return true;
   } catch (error) {
     console.error("Certificate generation failed:", error);
+    alert("Certificate download failed. Please try again.");
     return false;
   }
 }
