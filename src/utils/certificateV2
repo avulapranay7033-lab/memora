@@ -1,0 +1,215 @@
+export async function downloadCertificate(quizData, score, respondentName, gender) {
+  console.log('=== CERTIFICATE V2 STARTED ===');
+  
+  try {
+    const prefix = gender === "mr" ? "Mr" : "Miss";
+    const date = new Date().toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = 1800;
+    canvas.height = 1272;
+    
+    console.log('Canvas created, drawing CRAZY design...');
+    
+    // === CRAZY GRADIENT BACKGROUND ===
+    const gradient = ctx.createLinearGradient(0, 0, 1800, 1272);
+    gradient.addColorStop(0, '#667eea');
+    gradient.addColorStop(0.5, '#764ba2');
+    gradient.addColorStop(1, '#f093fb');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 1800, 1272);
+    
+    // === GEOMETRIC PATTERNS ===
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 1800; i += 100) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, 1272);
+      ctx.stroke();
+    }
+    for (let j = 0; j < 1272; j += 100) {
+      ctx.beginPath();
+      ctx.moveTo(0, j);
+      ctx.lineTo(1800, j);
+      ctx.stroke();
+    }
+    
+    // === BIG CIRCLES IN CORNERS ===
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.beginPath();
+    ctx.arc(0, 0, 300, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(1800, 0, 300, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(0, 1272, 300, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(1800, 1272, 300, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // === STYLISH MEMORA BADGE ===
+    ctx.save();
+    ctx.translate(900, 150);
+    ctx.rotate(-0.05);
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetY = 10;
+    
+    const badgeWidth = 500;
+    const badgeHeight = 80;
+    ctx.fillRect(-badgeWidth/2, -badgeHeight/2, badgeWidth, badgeHeight);
+    
+    ctx.shadowColor = 'transparent';
+    
+    ctx.fillStyle = '#764ba2';
+    ctx.font = 'bold 50px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('💙 MEMORA 💙', 0, 15);
+    
+    ctx.restore();
+    
+    // === MAIN TITLE - STYLED ===
+    ctx.save();
+    ctx.translate(900, 350);
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 15;
+    
+    ctx.font = 'bold 120px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('CERTIFICATE', 0, 0);
+    
+    ctx.font = 'bold 100px Georgia';
+    ctx.fillText('of Friendship', 0, 120);
+    
+    ctx.restore();
+    
+    // === DECORATIVE LINE ===
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(300, 520);
+    ctx.lineTo(1500, 520);
+    ctx.stroke();
+    
+    // === SUBTITLE ===
+    ctx.fillStyle = '#ffd700';
+    ctx.font = 'italic 45px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('This certifies that', 900, 600);
+    
+    // === NAME - HUGE AND STYLISH ===
+    ctx.save();
+    ctx.translate(900, 750);
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 25;
+    ctx.shadowOffsetY = 10;
+    
+    ctx.font = 'bold 130px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${prefix} ${respondentName}`, 0, 0);
+    
+    ctx.restore();
+    
+    // === GOLD UNDERLINE ===
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(200, 790);
+    ctx.lineTo(1600, 790);
+    ctx.stroke();
+    
+    // === DESCRIPTION ===
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '40px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('has successfully completed the memory challenge', 900, 880);
+    
+    // Quiz title - styled
+    ctx.save();
+    ctx.translate(900, 960);
+    ctx.rotate(0.02);
+    
+    ctx.fillStyle = '#ffd700';
+    ctx.font = 'italic bold 55px Georgia';
+    ctx.fillText(`"${quizData.title}"`, 0, 0);
+    
+    ctx.restore();
+    
+    // Creator
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.font = '36px Georgia';
+    ctx.fillText(`created by ${quizData.creatorName}`, 900, 1030);
+    
+    // === PERCENTAGE - CRAZY BIG ===
+    ctx.save();
+    ctx.translate(900, 1150);
+    
+    // Background circle
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.beginPath();
+    ctx.arc(0, 0, 120, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Percentage text
+    ctx.fillStyle = '#ffd700';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 20;
+    ctx.font = 'bold 140px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${score.percentage}%`, 0, 50);
+    
+    ctx.restore();
+    
+    // Score details
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${score.correct} out of ${score.total} answers matched`, 900, 1230);
+    
+    // === FOOTER ===
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.font = 'bold 28px Arial';
+    ctx.fillText(date, 300, 1250);
+    
+    ctx.font = '80px Arial';
+    ctx.fillText('🏆', 1500, 1250);
+    
+    console.log('=== CERTIFICATE V2 COMPLETE ===');
+    
+    // Download
+    const dataUrl = canvas.toDataURL('image/png', 1.0);
+    const link = document.createElement('a');
+    link.download = `memora-crazy-${respondentName}.png`;
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    console.log('=== DOWNLOAD TRIGGERED ===');
+    return true;
+    
+  } catch (error) {
+    console.error('=== CERTIFICATE V2 FAILED ===', error);
+    alert(`Failed: ${error.message}`);
+    return false;
+  }
+}

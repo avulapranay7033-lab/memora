@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Confetti from "react-confetti";
 import { showToast } from "../components/Toast";
-import { downloadCertificate } from "../utils/certificate";
+import { downloadCertificate } from "../utils/certificateV2";
 import "./Result.css";
 
 function Result({ response, quiz, onBack }) {
